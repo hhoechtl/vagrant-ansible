@@ -1,0 +1,16 @@
+---
+- name: Install xdebug PECL extension
+  command: "pecl install xdebug"
+  register: pecl_result
+  changed_when: "pecl_result.rc == 0"
+  failed_when: "not (('already installed' in pecl_result.stdout) or ('install ok:' in pecl_result.stdout))"
+  tags: profiling
+
+- name: Create extension ini file in mods-available
+  copy: src=php/mods-available/xdebug.ini dest=/etc/php5/mods-available/ owner=root mode=644
+  tags: profiling
+
+- name: Enable module
+  shell: php5enmod xdebug
+  notify: restart apache
+  tags: profiling

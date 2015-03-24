@@ -1,0 +1,119 @@
+---
+# =========================================================
+# Basic project_name, usually provided by vagrant
+# If running ansible without vagrant, this must be set
+# =========================================================
+#project_name: project_skeleton
+
+# =========================================================
+# Virtual Hosts which should be created
+# =========================================================
+virtual_hosts:
+  - "{{project_name}}.local"
+  - "www.{{project_name}}.local"
+
+# =========================================================
+# MySQL settings
+# =========================================================
+mysql_user: "{{project_name}}"
+mysql_pass: "{{project_name}}"
+mysql_db:
+  - "{{project_name}}"
+
+# =========================================================
+# PHP packages we always need
+# =========================================================
+dotdeb_php_version: "php56"
+php_packages:
+  - php5-common
+  - php5-cli
+  - php-pear
+  - php5-gd
+  - php5-imagick
+  - php5-memcache
+  - php5-mcrypt
+  - php5-mysql
+  - php5-curl
+  - php5-dev
+
+# =========================================================
+# PHP INI settings
+# =========================================================
+php_settings:
+  - { var: 'post_max_size', val: '20M' }
+  - { var: 'upload_max_filesize', val: '20M' }
+  - { var: 'date.timezone', val: 'Europe/Berlin' }
+  - { var: 'memory_limit', val: '1024M' }
+  - { var: 'html_errors', val: 'Off' }
+  - { var: 'max_execution_time', val: '360' }
+  - { var: 'display_errors', val: 'On' }
+php_settings_cli:
+  - { var: 'post_max_size', val: '20M' }
+  - { var: 'upload_max_filesize', val: '20M' }
+  - { var: 'date.timezone', val: 'Europe/Berlin' }
+  - { var: 'memory_limit', val: '1024M' }
+  - { var: 'html_errors', val: 'Off' }
+  - { var: 'max_execution_time', val: '0' }
+  - { var: 'display_errors', val: 'On' }
+
+# =========================================================
+# IF using role apache2 as HTTP server
+# =========================================================
+apache2_mods:
+  - alias
+  - headers
+  - rewrite
+  - ssl
+  - setenvif
+  - deflate
+
+# =========================================================
+# IF using grunt, bower, etc. we need NodeJS
+# =========================================================
+nodejs_version: "0.10.24"
+nodejs_version_tag: "v{{nodejs_version}}"
+nodejs_file_tag: "node-{{nodejs_version_tag}}"
+nodejs_file_name: "{{nodejs_file_tag}}.tar.gz"
+nodejs_base_url: "http://nodejs.org/dist/v{{nodejs_version}}/"
+nodejs_tarball_url: "{{nodejs_base_url}}{{nodejs_file_name}}"
+nodejs_shasum_url: "{{nodejs_base_url}}SHASUMS.txt"
+nodejs_path: "/usr/local/"
+nodejs_tmp_dir: "/tmp/"
+# npm packages
+nodejs_global_packages:
+  - nodemon
+  - debug
+  - foreman
+  - bower
+  - grunt
+  - grunt-cli
+
+# =========================================================
+# Basic OS components we probably need
+# =========================================================
+system_packages:
+  - build-essential
+  - git
+  - subversion
+  - libevent-dev
+  - python-dev
+  - python-setuptools
+  - postfix
+  - curl
+  - vim
+  - graphviz
+  - unzip
+  - wget
+  - imagemagick
+  - graphicsmagick
+  - libcurl4-openssl-dev
+  - libsasl2-2
+  - libsasl2-dev
+  - libcurl3
+  - ruby1.9.1-dev
+  - openjdk-7-jre-headless
+  - openjdk-7-jdk
+  - php5
+  - python-pip
+  - python-mysqldb
+  - openssl

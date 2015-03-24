@@ -1,0 +1,3 @@
+---
+- include: install_prerequisites.yml
+- include: install_xdebug.yml

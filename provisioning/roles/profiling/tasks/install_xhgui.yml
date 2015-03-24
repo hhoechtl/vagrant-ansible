@@ -1,0 +1,24 @@
+---
+- name: clone XHGui
+  git: repo=https://github.com/perftools/xhgui dest=/var/www/xhgui
+  tags: profiling
+
+- name: install XHGui
+  command: /usr/bin/php /var/www/xhgui/install.php
+
+- name: copy Apache vhost config
+  template: src=xhgui.conf.j2 dest=/etc/apache2/sites-available/xhgui.conf
+  tags: apache
+
+- name: enable vhost
+  shell: a2ensite xhgui.conf
+  notify: restart apache
+  tags: profiling
+
+# Set PHP variables
+- name: PHP variables in php.ini for apache
+  ini_file: dest=/etc/php5/apache2/php.ini section=PHP option={{item.var}} value={{item.val}}
+  with_items:
+    - { var: 'auto_prepend_file', val: '/var/www/xhgui/external/header.php' }
+  notify:
+    - restart apache

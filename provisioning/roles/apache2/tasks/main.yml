@@ -1,0 +1,38 @@
+---
+# Install apache2
+- name: Install apache2 packages
+  apt: name={{ item }}
+  with_items:
+    - apache2
+    - libapache2-mod-php5
+# Enable apache2 modules
+- name: Enable Apache modules
+  apache2_module: state=present name={{item}}
+  with_items: apache2_mods
+  notify:
+    - restart apache
+# Generate self-signed ssl certificate
+- name: Configure self-signed SSL
+  shell: mkdir -p /etc/ssl/localcerts; openssl req -new -x509 -days 365 -nodes -out /etc/ssl/localcerts/apache.pem -keyout /etc/ssl/localcerts/apache.key -subj "/C=DE/ST=/L=/O=/OU=/CN=/"; chmod 600 /etc/ssl/localcerts/apache*
+# Remove default vhost
+- name: Remove default vhost
+  shell: a2dissite 000-default
+# Configure virtual hosts
+- name: Configure VHost
+  template: src=vhost.conf.j2 dest=/etc/apache2/sites-enabled/vhost.conf
+  notify:
+    - restart apache
+
+# Install php modules using apt
+- name: Install PHP modules
+  apt: name={{item}}
+  with_items: php_packages
+  notify:
+    - restart apache
+
+# Set PHP variables
+- name: PHP variables in php.ini for apache
+  ini_file: dest=/etc/php5/apache2/php.ini section=PHP option={{item.var}} value={{item.val}}
+  with_items: php_settings
+  notify:
+    - restart apache

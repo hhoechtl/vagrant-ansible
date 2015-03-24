@@ -1,0 +1,44 @@
+NameVirtualHost *:80
+NameVirtualHost *:443
+
+{% for vhost in virtual_hosts %}
+
+<VirtualHost *:80>
+  ServerName {{vhost}}
+
+  DocumentRoot /vagrant/
+   <Directory /vagrant/>
+     Options Indexes FollowSymLinks MultiViews
+     AllowOverride all
+     Order allow,deny
+     allow from all
+   </Directory>
+   ErrorLog /var/log/apache2/{{vhost}}_error.log
+   LogLevel warn
+   CustomLog /var/log/apache2/{{vhost}}_access.log combined
+   ServerSignature Off
+   SetEnv TYPO3_CONTEXT Development
+   SetEnv BASE_URL {{vhost}}
+</VirtualHost>
+<VirtualHost *:443>
+  ServerName {{vhost}}
+
+  DocumentRoot /vagrant/
+   <Directory /vagrant/>
+     Options Indexes FollowSymLinks MultiViews
+     AllowOverride all
+     Order allow,deny
+     allow from all
+   </Directory>
+   ErrorLog /var/log/apache2/{{vhost}}_error.log
+   LogLevel warn
+   CustomLog /var/log/apache2/{{vhost}}_access.log combined
+   ServerSignature Off
+   SetEnv TYPO3_CONTEXT Development
+   SetEnv BASE_URL {{vhost}}
+   SSLEngine On
+   SSLCertificateFile /etc/ssl/localcerts/apache.pem
+   SSLCertificateKeyFile /etc/ssl/localcerts/apache.key
+</VirtualHost>
+
+{% endfor %}

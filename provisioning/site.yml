@@ -1,0 +1,15 @@
+- hosts: all
+  gather_facts: yes
+  roles:
+    - common
+    - mysql
+    - apache2
+    # - nginx
+    - nodejs
+    # Debugging currently only works with apache2
+    - debug
+    # Profiling currently only works with apache2
+    - profiling
+
+  vars_files:
+    - vars.yml

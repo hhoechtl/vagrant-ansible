@@ -1,0 +1,20 @@
+---
+# Use dotdeb repository for custom PHP version
+- include: dotdeb.yml
+# Basic OS configuration => system packages, hostname, etc.
+- include: os_basics.yml
+
+# Install bundler-gem
+- name: Install bundler
+  gem: name=bundler state=latest
+
+# Basic PHP settings for CLI
+- name: PHP variables in php.ini for cli
+  ini_file: dest=/etc/php5/cli/php.ini section=PHP option={{item.var}} value={{item.val}}
+  with_items: php_settings_cli
+  notify:
+    - restart apache
+
+# Install Composer
+- name: Install Composer
+  shell: curl -sS https://getcomposer.org/installer | php; mv composer.phar /usr/local/bin/composer

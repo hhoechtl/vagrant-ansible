@@ -1,0 +1,16 @@
+---
+# Use Dotdeb repositories
+- name: APT | Add DotDeb wheezy repository
+  apt_repository: repo='{{item}}'
+  with_items:
+    - deb http://packages.dotdeb.org wheezy all
+    - deb-src http://packages.dotdeb.org wheezy all
+    - deb http://packages.dotdeb.org wheezy-{{dotdeb_php_version}} all
+    - deb-src http://packages.dotdeb.org wheezy-{{dotdeb_php_version}} all
+  tags: dotdeb
+- name: APT | Install DotDeb key
+  apt_key: url=http://www.dotdeb.org/dotdeb.gpg
+  tags: dotdeb
+# Update apt repository
+- name: Update package cache
+  apt: update_cache=yes

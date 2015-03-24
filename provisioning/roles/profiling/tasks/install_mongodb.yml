@@ -1,0 +1,24 @@
+---
+# Use mongo repositories
+- name: APT | Add MongoDB wheezy repository
+  apt_repository: repo='{{item}}'
+  with_items:
+    - deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/3.0 main
+  tags: mongo
+- name: APT | Install MongoDB key
+  apt_key: keyserver=keyserver.ubuntu.com id=7F0CEB10
+  tags: mongo
+# Update apt repository
+- name: Update package cache
+  apt: update_cache=yes
+# Install mongodb
+- name: Install system packages
+  apt: name=mongodb-org
+  tags: mongo
+# Install php mongo module
+- name: Install mongo PECL extension
+  command: "pecl install mongo"
+  register: pecl_result
+  changed_when: "pecl_result.rc == 0"
+  failed_when: "not (('already installed' in pecl_result.stdout) or ('install ok:' in pecl_result.stdout))"
+  tags: mongo

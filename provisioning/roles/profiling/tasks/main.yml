@@ -1,0 +1,4 @@
+---
+- include: install_xhprof.yml
+- include: install_mongodb.yml
+- include: install_xhgui.yml

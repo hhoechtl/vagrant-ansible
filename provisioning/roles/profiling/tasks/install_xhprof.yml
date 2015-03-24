@@ -1,0 +1,16 @@
+---
+- name: Install XHProf PECL extension
+  command: "pecl install xhprof-beta"
+  register: pecl_result
+  changed_when: "pecl_result.rc == 0"
+  failed_when: "not (('already installed' in pecl_result.stdout) or ('install ok:' in pecl_result.stdout))"
+  tags: profiling
+
+- name: Create extension ini file in mods-available # echo "extension=xhprof.so > xhprof.ini"
+  copy: src=php/mods-available/xhprof.ini dest=/etc/php5/mods-available/ owner=root mode=0644
+  tags: profiling
+
+- name: Enable module
+  shell: php5enmod xhprof
+  notify: restart apache
+  tags: profiling
