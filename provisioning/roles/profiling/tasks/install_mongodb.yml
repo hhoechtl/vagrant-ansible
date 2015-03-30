@@ -22,3 +22,10 @@
   changed_when: "pecl_result.rc == 0"
   failed_when: "not (('already installed' in pecl_result.stdout) or ('install ok:' in pecl_result.stdout))"
   tags: mongo
+- name: Create extension ini file in mods-available # echo "extension=xhprof.so > xhprof.ini"
+  copy: src=php/mods-available/mongo.ini dest=/etc/php5/mods-available/ owner=root mode=0644
+  tags: profiling
+- name: Enable module mongo
+  shell: php5enmod mongo
+  notify: restart apache
+  tags: profiling

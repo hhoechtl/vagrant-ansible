@@ -72,6 +72,7 @@ apache2_mods:
   - ssl
   - setenvif
   - deflate
+  - php5
 
 # =========================================================
 # Role: nodejs, For using grunt, bower, etc.
