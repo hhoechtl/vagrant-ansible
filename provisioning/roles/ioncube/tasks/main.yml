@@ -6,7 +6,7 @@
   register: ioncube_installed
 - name: Download ioncube
   get_url: url={{ioncube_url}} dest=/tmp/ioncube.tar.gz
-  when: ioncube_installed.exists == False
+  when: ioncube_installed.stat.exists == False
 - name: Unpack ioncube
   command: tar -xvzf /tmp/ioncube.tar.gz chdir=/tmp/ioncube
-  when: ioncube_installed.exists == False
+  when: ioncube_installed.stat.exists == False

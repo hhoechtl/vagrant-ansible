@@ -11,12 +11,21 @@
   with_items: apache2_mods
   notify:
     - restart apache
+
+# Check if SSL certificate already exists
+- stat: path=/etc/ssl/localcerts/apache.pem
+  register: ssl_certificat
 # Generate self-signed ssl certificate
 - name: Configure self-signed SSL
   shell: mkdir -p /etc/ssl/localcerts; openssl req -new -x509 -days 365 -nodes -out /etc/ssl/localcerts/apache.pem -keyout /etc/ssl/localcerts/apache.key -subj "/C=DE/ST=/L=/O=/OU=/CN=/"; chmod 600 /etc/ssl/localcerts/apache*
+  when: ssl_certificat.stat.exists == False
+# Check if default host is enabled
+- stat: path=/etc/apache2/sites-enabled/000-default
+  register: default_vhost
 # Remove default vhost
 - name: Remove default vhost
   shell: a2dissite 000-default
+  when: default_vhost.stat.exists == True
 # Configure virtual hosts
 - name: Configure VHost
   template: src=vhost.conf.j2 dest=/etc/apache2/sites-enabled/vhost.conf
