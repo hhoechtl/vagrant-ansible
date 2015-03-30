@@ -5,7 +5,12 @@
 VAGRANTFILE_API_VERSION = "2"
 
 # Add the projectname here => don't use more than 8 letters and no dashes (-)
-PROJECT_NAME = "project_skeleton"
+PROJECT_NAME = "myproject"
+
+# Which virtual hosts should be applied for this project => hostsupdater will set /etc/hosts
+VHOSTS = [PROJECT_NAME+".local.de","de."+PROJECT_NAME+".local.de"]
+# If you enable the role profiling, uncomment the following line
+VHOSTS.concat(["prof."+PROJECT_NAME+".local.de"])
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
@@ -15,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "puphpet/debian75-x64"
   config.vm.hostname = PROJECT_NAME+".local.de"
-  config.hostsupdater.aliases = [PROJECT_NAME+".local"]
+  config.hostsupdater.aliases = VHOSTS
 
   config.vm.network "private_network", ip: "192.168.33.55"
   # For performance reasons we use nfs as mount
@@ -41,7 +46,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Run commands as root.
     ansible.sudo = true
     ansible.extra_vars = {
-      project_name: PROJECT_NAME
+      project_name: PROJECT_NAME,
+      virtual_hosts: VHOSTS
     }
   end
 

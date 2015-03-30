@@ -7,10 +7,11 @@
 
 # =========================================================
 # Virtual Hosts which should be created
+# If running ansible without vagrant, this must be set
 # =========================================================
-virtual_hosts:
-  - "{{project_name}}.local"
-  - "www.{{project_name}}.local"
+#virtual_hosts:
+#  - "{{project_name}}.local.de"
+#  - "www.{{project_name}}.local.de"
 
 # =========================================================
 # MySQL settings
@@ -32,7 +33,7 @@ php_packages:
   - php5-imagick
   - php5-memcache
   - php5-mcrypt
-  - php5-mysql
+  - php5-mysqlnd
   - php5-curl
   - php5-dev
 
@@ -57,7 +58,12 @@ php_settings_cli:
   - { var: 'display_errors', val: 'On' }
 
 # =========================================================
-# IF using role apache2 as HTTP server
+# ionCube Loader
+# =========================================================
+ioncube_url: http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
+
+# =========================================================
+# Role: apache, IF using role apache2 as HTTP server
 # =========================================================
 apache2_mods:
   - alias
@@ -68,17 +74,9 @@ apache2_mods:
   - deflate
 
 # =========================================================
-# IF using grunt, bower, etc. we need NodeJS
+# Role: nodejs, For using grunt, bower, etc.
 # =========================================================
 nodejs_version: "0.10.24"
-nodejs_version_tag: "v{{nodejs_version}}"
-nodejs_file_tag: "node-{{nodejs_version_tag}}"
-nodejs_file_name: "{{nodejs_file_tag}}.tar.gz"
-nodejs_base_url: "http://nodejs.org/dist/v{{nodejs_version}}/"
-nodejs_tarball_url: "{{nodejs_base_url}}{{nodejs_file_name}}"
-nodejs_shasum_url: "{{nodejs_base_url}}SHASUMS.txt"
-nodejs_path: "/usr/local/"
-nodejs_tmp_dir: "/tmp/"
 # npm packages
 nodejs_global_packages:
   - nodemon

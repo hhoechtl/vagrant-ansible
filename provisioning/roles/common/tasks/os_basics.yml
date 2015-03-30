@@ -10,3 +10,7 @@
 - name: Install system packages
   apt: name={{ item }}
   with_items: system_packages
+- name: Copy bashrc to global etc
+  copy: src=bashrc dest=/etc/bash.bashrc
+- name: Copy bashrc to vagrant user
+  copy: src=bashrc dest=/home/vagrant owner=vagrant group=vagrant mode="u+x"

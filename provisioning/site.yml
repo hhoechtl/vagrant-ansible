@@ -6,6 +6,7 @@
     - apache2
     # - nginx
     - nodejs
+    # - ioncube
     # Debugging currently only works with apache2
     - debug
     # Profiling currently only works with apache2
